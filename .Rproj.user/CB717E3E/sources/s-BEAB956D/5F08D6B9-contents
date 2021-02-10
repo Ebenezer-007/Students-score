@@ -1,0 +1,311 @@
+# This ALA is to introduce beginners in R programming to R basics.
+# Students must have already installed the latest versions of R and Rstudio
+# on their computer. 
+
+## In R, any word or line that begins with the symbol '#' is considered 
+## as a comment. Comments are useful in explaining written codes.
+
+## To run a code, place your cursor on the code and click run or CTRL+ENTER
+## Outputs of codes run will appear in the console window (bottom-left window)
+
+# Using R as a calculator
+2+2 # Addition using '+' symbol
+
+3-2 # Subtraction using '-' symbol
+
+2*3 # Multiplication using '*' symbol (asterisk)
+
+50/5 # Division using the '/' symbol
+
+2+2*10 # R knows order of operations
+
+5^2 # Exponents using '^' symbol or double asterisks '**'
+5**2;2+2*10;
+2+2*10
+
+###########################################################################
+## Creating objects in R
+## An object could be Numeric, Character or Logical (i.e. TRUE or FALSE)
+## Every created object must have a name -- see rules for naming objects
+## Created objects are kept in R's memory for future reference, unless removed
+## Objects created can be viewed in R by running their names
+
+A <- 2+2 # Create an object named A, which is numeric or number
+A
+
+A1 <- "Ali is cool" # Create an object named A1, which is a character 
+A1
+
+B <- 2+2*10 # Create an object named B
+B
+
+## Objects created can be used in writing codes
+
+C <- B/11 # Object C is created using object B divided by 11
+C
+
+D <- B+C^2 # Object D is created by adding B to C squared
+D
+
+G <- D-B # Object G is created by subtracting B from D
+G
+##############################################################################
+
+########################################################################
+# Create a sequence of numbers from 1 to 10
+A <- 1:10 # two numbers separated by a colon creates a number sequence
+A
+
+# create the same sequence by using an inbuilt function
+A <- seq(from=1, to=10) # seq is an inbuilt function in R 
+A
+
+# My own code 
+B <- seq(from=1, to=100)
+B
+
+# Create a sequence of numbers from 1 to 10 by increments of 0.5
+A <- seq(from=1, to=10, by=0.5)
+A
+
+# Create vectors using the concatenate function
+## All of these do the same thing!!
+A <- c(1,2,3,4,5,6,7)
+A
+A <- c(1:7)
+A
+A <- seq(1,7)
+A
+########################################################################
+
+# Create a vector using the rep function
+A <- rep(5, times=10)
+A
+
+A <- rep(1:5, each=3)
+A
+
+A <- rep(1:5, times=3)
+A
+
+A <- rep(1:5, each= 5, times=3)
+A
+
+A <- rep(LETTERS[1:5], each=5, times=3)
+A
+
+A <- rep(letters[1:5], time=5)
+A
+#############################################################################
+# INDEXING VECTORS AND MATRICES OR DATA FRAMES
+## Create a vector named vec1
+vec1 <- c(2, 3, 1, 6, 4, 3, 3, 7)
+vec1
+
+# subset the first item in vec1 vector
+vec1[1]
+
+# check if there is any item greater than 6 in vec1 vector
+# it gives a logical output
+vec1 > 6
+
+# subset any item greater than 6 in vec1 vector
+vec1[vec1>6]
+
+# subset any item greater than 6 OR less than 3 in vec1 vector
+vec1[vec1>6 | vec1<3] 
+
+# subset any item less than 6 AND greater than 2 in vec1 vector
+vec1[vec1<6 & vec1>1]
+
+# Create a new vector named vec2
+vec2 <- vec1*10
+vec2 
+
+## Create a data frame from two vectors
+### vectors must have the same length
+mat1 <- data.frame(A=vec1, B=vec2)
+mat1
+
+# check dimensions of mat1
+dim(mat1)
+
+# check row and column names of mat1
+dimnames(mat1)
+
+# indexing a data frame or matrix
+## subset first row of mat1
+mat1[1,]
+
+## subset column 1 of mat1
+mat1[,1]
+
+# subset column 2 of mat1
+mat1[,2]
+
+mat1[c(1,4),1]
+
+## subset item in first row and first column of mat1
+mat1[1,1]
+
+# subset first 4 rows of mat1
+mat1[1:4,]
+
+# view first six rows of mat1
+head(mat1)
+
+# view last six rows of mat1
+tail(mat1)
+
+#########################################################################
+# BASIC STATISTICAL ANALYSES IN R
+# calculate mean of variables in mat1
+mean(mat1$A)# Calculates mean of any numeric variable without missing data
+mean(mat1$B)
+paste("Mean of variable A is:", mean(mat1$A))
+
+mat1
+# OR use the apply function  for a data frame with multiple numeric columns
+apply(mat1,2,mean) # use 1 if the variables are rows
+apply(mat1,2,sd) # sd is the function for st. dev.
+apply(mat1,2,var) # var is the function for variance
+apply(mat1,2,length)# length is the function for sample size
+apply(mat1,2,min) # min is the function for minimum value
+apply(mat1,2,max)# max is the function for maximum value
+
+## There's no inbuilt function for standard error, and cv
+
+# Create a function to calculate the st. error of all variables
+## in a matrix or data frame
+vec4 <- c(2,3,5,6,7,8)
+vec4
+se <- function(x) {sd(x)/sqrt(length(x))}
+
+# Use the "apply" function to obtain se for column variables
+## in mat1
+apply(mat1,2,se) 
+
+# ASSIGNMENT 1
+# Create a function to calculate the cv of a numeric variable
+## Hint: use the example of se as a guide
+
+
+
+### Own code create function
+cv <- function(x) {
+  mean_value = mean(x)
+  std_dev <- sd(x, na.rm = T)
+  100 * std_dev/mean_value}
+
+### Own code run cv function
+apply(mymatrix, 2, cv)
+cv(mymatrix$Jacinta) ## another way to run the code without using the apply funCtion
+
+
+
+
+
+
+
+# Create a function to compute descriptive statistics of variables
+## for any data matrix or frame; the name of the function is 'stat'
+
+stat <- function(x){
+n <- ncol(x)# get number of variables in data matrix
+c.mat <- matrix(0,nrow = n, ncol=6)# Create an empty matrix to store results
+
+for (i in 1:n) {
+  y <- x[,i] # subset column variables
+  N <- length(y)# sample size
+  M <- mean(y, na.rm = T) # mean
+  s.d <-  sd(y, na.rm = T)# st. dev
+  cv <- 100 * s.d/M # coefficient of var
+  Min <- min(y, na.rm = T) # Minimum value
+  Max <- max(y, na.rm = T) # Maximum value
+  b1 <- c(N,M,s.d,cv,Min,Max) # combine all results
+  c.mat[i,] <- b1 # Fill empty matrix with results
+}
+colnames(c.mat) <- c("N","Mean","sd","cv","Min","Max")
+rownames(c.mat) <- colnames(x) # row names for results = column names of data
+c.mat <- round(c.mat,2) # round off to two decimal places
+print(c.mat) # print or view results
+}
+
+
+## Make sure all the column variables in the data matrix or frame
+## are numeric, i.e. No factor or character variables.
+# Use 'stat' function on mat1
+stat(mat1)
+
+# DATA SIMULATION IN R
+## To simulate normally distributed data, we use the 'rnorm' function
+
+A <- rnorm(50,mean=65, sd=8) # simulate 50 data points to have a mean=65 and sd=8
+A
+
+B <- rnorm(50,mean=45, sd=20) # simulate 50 data points to have a mean=45 and sd=20
+B
+
+C <- rnorm(50,mean=50, sd=2) # simulate 50 data points to have a mean=50 and sd=2
+
+# create a data frame using simulated data
+
+dat1 <- data.frame(Genetics=A, Breeding=B, Statistics=C)
+head(dat1)# view first 6 rows of dat1
+dim(dat1) # view dimension of dat1
+dimnames(dat1)# view row and column names of dat1
+
+# rename rows in dat1
+rownames(dat1) <- paste0("student",1:50)
+head(dat1)
+
+## Let's use our 'stat' function to get descriptive statistics for dat1
+stat(dat1)
+
+
+# ASSIGNMENT 2
+# Modify the above stat function for descriptive statistics to include  
+# the standard error, and range.
+########################################################################
+
+  ### ASSIGNMENT 2 ANSWER ###
+statfunction_modified <- function(x){
+  n <- ncol(x)
+  result_matrix <- matrix(0,nrow = n, ncol=8)
+  for (i in 1:n) {
+    y <- x[,i]
+    N <- length(y)
+    M <- mean(y, na.rm = T)
+    s.d <-  sd(y, na.rm = T)
+    cv <- 100 * s.d/M
+    Min <- min(y, na.rm = T)
+    Max <- max(y, na.rm = T)
+    std_error <- sd(y)/sqrt(length(y))
+    range_val <- diff(range(y, na.rm = T))
+    b3 <- c(N,M,s.d,cv,Min,Max,std_error,range_val)
+    result_matrix[i,] <- b3
+}
+colnames(result_matrix) <- c("N","Mean","sd","cv","Min","Max","Stderror","Range")
+rownames(result_matrix) <- colnames(x) # row names for results = column names of data
+result_matrix <- round(result_matrix,2) # round off to two decimal places
+print(result_matrix) # print or view results
+}
+
+# ASSIGNMENT 3
+# Create a new data frame or matrix with with 100 x 5 dimensions using
+# randomly generated normally distributed variables. Apply your modified 
+# stat function on the new data frame created to compute its descriptive
+# statistics.
+##########################################################################
+
+
+    ### ASSIGNMENT 3 ANSWER ###
+sample <- rnorm(10)
+sample
+stat(sample)
+
+mat4 <- matrix(rnorm(500, mean = 2, sd = 3), nrow = 100, ncol = 5)
+dim(mat4) # check dimensions of matrix 
+statfunction_modified(mat4)
+stat(mat4)
+
